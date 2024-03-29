@@ -6,16 +6,7 @@ from langchain.tools import Tool
 # Include the LLM from a previous lesson
 from llm import llm
 
-agent_prompt = hub.pull("hwchase17/react-chat")
-agent = create_react_agent(llm, tools, agent_prompt)
-agent_executor = AgentExecutor(
-    agent=agent,
-    tools=tools,
-    memory=memory,
-    verbose=True
-)
-
-
+# Define tools first
 tools = [
     Tool.from_function(
         name="General Chat",
@@ -25,10 +16,23 @@ tools = [
     )
 ]
 
+# Define memory
 memory = ConversationBufferWindowMemory(
     memory_key='chat_history',
     k=5,
     return_messages=True,
+)
+
+# Pull agent prompt
+agent_prompt = hub.pull("hwchase17/react-chat")
+
+# Create agent and executor
+agent = create_react_agent(llm, tools, agent_prompt)
+agent_executor = AgentExecutor(
+    agent=agent,
+    tools=tools,
+    memory=memory,
+    verbose=True
 )
 
 
